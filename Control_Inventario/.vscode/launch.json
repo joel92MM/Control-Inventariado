@@ -2,6 +2,13 @@
     "configurations": [
         {
             "type": "java",
+            "name": "ControlInventariadoApplication",
+            "request": "launch",
+            "mainClass": "com.aplicacion.inventariado.ControlInventariadoApplication",
+            "projectName": "inventariado"
+        },
+        {
+            "type": "java",
             "name": "Spring Boot-ControlInventariadoApplication<inventariado>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
