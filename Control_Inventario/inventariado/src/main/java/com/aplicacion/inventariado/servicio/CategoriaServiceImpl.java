@@ -93,4 +93,55 @@ public class CategoriaServiceImpl implements ICategoriaServicio{
         return new ResponseEntity<CategoriaRespuestaRest>(response, HttpStatus.OK);
     }
 
+    @Override
+    @Transactional
+    public ResponseEntity<CategoriaRespuestaRest> eliminar(Long id) {
+        // TODO Auto-generated method stub
+        CategoriaRespuestaRest response = new CategoriaRespuestaRest();
+        try {
+            categoriaDAO.deleteById(id);
+            response.setMetadata("Respuesta ok", "00", "Categoria eliminada");
+        } catch (Exception e) {
+            // TODO: handle exception
+            response.setMetadata("Respuesta no ok", "-1", "Error al eliminar categoria");
+            e.getStackTrace();
+            return new ResponseEntity<CategoriaRespuestaRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+        return new ResponseEntity<CategoriaRespuestaRest>(response, HttpStatus.OK);
+    }
+
+    @Override
+    @Transactional
+    public ResponseEntity<CategoriaRespuestaRest> actualizar(Categoria categoria, Long id) {
+        // TODO Auto-generated method stub
+
+        CategoriaRespuestaRest response = new CategoriaRespuestaRest();
+        List<Categoria> lista = new ArrayList<>();
+        try {
+            Optional<Categoria> categoriaActual = categoriaDAO.findById(id);
+            if(categoriaActual.isPresent()){
+                categoriaActual.get().setName(categoria.getName());
+                categoriaActual.get().setDescription(categoria.getDescription());
+                Categoria categoriaActualizar = categoriaDAO.save(categoriaActual.get());
+                if (categoriaActualizar != null) {
+                    lista.add(categoriaActualizar);
+                    response.getCategoriaRespuesta().setCategoria(lista);
+                    response.setMetadata("Respuesta ok", "00", "Categoria actualizada");
+                } else {
+                    response.setMetadata("Respuesta no ok", "-1", "Error al actualizar categoria");
+                    return new ResponseEntity<CategoriaRespuestaRest>(response, HttpStatus.BAD_REQUEST);
+                }
+            } else {
+                response.setMetadata("Respuesta no ok", "-1", "Error al actualizar categoria");
+                return new ResponseEntity<CategoriaRespuestaRest>(response, HttpStatus.NOT_FOUND);
+            }
+    } catch (Exception e) {
+        // TODO: handle exception
+        response.setMetadata("Respuesta no ok", "-1", "Error al actualizar categoria");
+        e.getStackTrace();
+        return new ResponseEntity<CategoriaRespuestaRest>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+        return new ResponseEntity<CategoriaRespuestaRest>(response, HttpStatus.OK);
+    }
+
 }
